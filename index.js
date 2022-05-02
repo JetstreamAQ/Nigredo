@@ -83,8 +83,8 @@ var page = function(req, res, searchTerms) {
 			var iter = ((page - 3) < 1) ? 1 : page - 3;
 			var end = (iter + 7) <= pageCount ? (iter + 7) : pageCount;
 
-			if (end < (page + 3)) {
-				iter -= (page + 3) - pageCount;
+			if (end < (page + 4)) {
+				iter -= (page + 4) - pageCount;
 			}
 
 			res.render('index', {title: 'URL', data: trimData, page, iter, end, pageCount, searchURI, search});
