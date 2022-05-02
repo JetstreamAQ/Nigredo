@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.2",
+    "express-sharp": "^4.2.40",
+    "glob": "^7.2.0",
+    "mysql": "^2.18.1",
+    "sharp": "^0.30.0"
+  },
+  "name": "imgdb",
+  "version": "0.0.1",
+  "description": "Image Database",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "JetstreamAQ",
+  "license": "ISC"
+}

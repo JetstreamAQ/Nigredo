@@ -1,0 +1,13 @@
+#ignore .env
+.env
+
+#ignore database images
+/img/2022
+/img/FLqX-c7XoAUhNQe.jpg
+/img/test
+/img
+
+#ignore VIM stuff
+*.swn
+*.swo
+*.swp

@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<!--
+	Lens by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Nigredo</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="icon" type="image/x-icon" href="favicon.png">
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload-0 is-preload-1 is-preload-2">
+
+		<!-- Main -->
+			<div id="main">
+
+				<!-- Header -->
+					<header id="header">
+						<h1>Nigredo</h1>
+						<form id="searchForm" action="/" method="post">
+							<input id="searchBar" type="text" name="search" value="<%= decodeURI(search) %>">
+							<button type="submit" value-"Submit">Search</button>
+						</form>
+					</header>
+				
+				<!-- Navigation: Top -->
+					<div id="navigation">
+						<!-- TODO: Legitimately hate how this looks...  -->
+
+						<% for (var i = iter; i <= end; i++) { %>
+							<% if (i == page) { %>
+								<a class="disabled"><%= i %></a>
+								<% continue; %>
+							<% } else if (i > 0) { %>
+								<a href="/?search=<%= searchURI %>&page=<%= i %>"><%= i%></a>
+								<% continue; %>
+							<% } %>
+						<% } %>
+						
+						<br>
+
+						<% if (page - 1 < 1) { %>
+							<a class="nav disabled" ><<</a>
+							<a class="nav disabled" ><</a>
+						<% } else { %>
+							<a class="nav" href="/?search=<%= searchURI %>&page=<%= 1 %>"><<</a>
+							<a class="nav" href="/?search=<%= searchURI %>&page=<%= (page - 1) %>"><</a>
+						<% } %>
+
+						<% if (page + 1 > pageCount) { %>
+							<a class="nav disabled" >></a>
+							<a class="nav disabled" >>></a>
+						<% } else { %>
+							<a class="nav" href="/?search=<%= searchURI %>&page=<%= (page + 1) %>">></a>
+							<a class="nav" href="/?search=<%= searchURI %>&page=<%= pageCount %>">>></a>
+						<% } %>
+					</div>
+
+
+				<!-- Thumbnail -->
+					<section id="thumbnails">
+						<%
+						if (data.length != 0) {
+							for (var i = 0; i < data.length; i++) {
+						%>
+							<article class="image">
+								<a class="thumbnail" href="<%= data[i].url %>"><img class="images" src="/thumb/<%= decodeURI(data[i].url) %>?w=400" alt=""></a>
+								<h2 class="dir"><%= decodeURI(data[i].url) %></h2>
+								<a href="<%= decodeURI(data[i].url) %>" target="_blank">View Original</a><br>
+
+								<div class="tags">
+								<% if (data[i].tags != null) {%>
+									<% let tags = data[i].tags.split(" "); %> <!--" vim is weirding out with the coloring-->
+									<% for (var j = 0; j < tags.length; j++) { %>
+										<div class="tag">
+											<button class="remove" href="">x</button>
+											<em><%= decodeURI(tags[j].replace(/_/g, ' ')) %></em>
+										</div>
+									<% } %>
+								<% } %>
+									<form id="addForm">
+										<div class="add">
+											<datalist class="tagList"></datalist>
+											<button type="button" class="insert">+</button>
+										</div>			
+									</form>
+								</div>
+							</article>
+							<% } %>
+						<% } %>
+					</section>
+
+				<!-- Navigation: Bottom -->
+					<div id="navigation">
+						<!-- TODO: Legitimately hate how this looks...  -->
+						<% if (page - 1 < 1) { %>
+							<a class="nav disabled" ><<</a>
+							<a class="nav disabled" ><</a>
+						<% } else { %>
+							<a class="nav" href="/?search=<%= searchURI %>&page=<%= 1 %>"><<</a>
+							<a class="nav" href="/?search=<%= searchURI %>&page=<%= (page - 1) %>"><</a>
+						<% } %>
+
+						<% if (page + 1 > pageCount) { %>
+							<a class="nav disabled" >></a>
+							<a class="nav disabled" >>></a>
+						<% } else { %>
+							<a class="nav" href="/?search=<%= searchURI %>&page=<%= (page + 1) %>">></a>
+							<a class="nav" href="/?search=<%= searchURI %>&page=<%= pageCount %>">>></a>
+						<% } %>
+
+						<br>
+
+						<% for (var i = iter; i <= end; i++) { %>
+							<% if (i == page) { %>
+								<a class="disabled"><%= i %></a>
+								<% continue; %>
+							<% } else if (i > 0) { %>
+								<a href="/?search=<%= searchURI%>&page=<%= i%>"><%= i%></a>
+								<% continue; %>
+							<% } %>
+						<% } %>
+					</div>
+
+				<!-- Footer -->
+					<div id="settings">
+						<hr>
+						<button type="button">Change Directory</button>
+						<button type="button" id="scan">Scan Directory</button>
+					</div>
+
+					<footer id="footer">
+						<ul class="copyright">
+							<li>&copy; JetstreamAQ.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a>.</li>
+						</ul>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery-ui-1.13.1/jquery-ui.min.js"></script>
+			<script src="assets/js/masonry.pkgd.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script src="assets/js/button.js"></script>
+	</body>
+</html>
