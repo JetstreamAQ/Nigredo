@@ -72,6 +72,12 @@ input, select, textarea {
 	appearance: none;
 }
 
+#noRes {
+	text-align: center;
+	font-weight: bold;
+	font-size: 2em;
+}
+
 .ui-helper-hidden-accessible {
 	height: 0;
 }

@@ -26,10 +26,11 @@ const entriesPerPage = 20;
 var search = "";
 
 var page = function(req, res, searchTerms) {
-	search = searchTerms;
-
-	//tag searching
+	search = decodeURI(searchTerms).trim();
 	let terms = search.split(" ");
+	for (let i = 0; i < terms.length; ++i)
+		terms[i] = escape(terms[i]);
+
 	let queryTerms = "(\'" + terms.join('\', \'') + "\')";
 	let searchURI = search;
 

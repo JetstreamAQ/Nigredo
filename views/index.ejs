@@ -25,9 +25,11 @@
 							<input id="searchBar" type="text" name="search" value="<%= decodeURI(search) %>">
 							<button type="submit" value-"Submit">Search</button>
 						</form>
+
 					</header>
-				
-				<!-- Navigation: Top -->
+			
+				<% if (data.length != 0) { %>
+					<!-- Navigation: Top -->
 					<div id="navigation">
 						<!-- TODO: Legitimately hate how this looks...  -->
 
@@ -60,6 +62,7 @@
 						<% } %>
 					</div>
 
+				<% } %>
 
 				<!-- Thumbnail -->
 					<section id="thumbnails">
@@ -91,41 +94,52 @@
 								</div>
 							</article>
 							<% } %>
+						<% } else { %>
+							<article class="image">
+								<a class="thumbnail" href="assets/NoRes.png"><img class="images" src="" alt=""></a>
+							</article>
 						<% } %>
 					</section>
+					
+					<% if (data.length == 0) {%>
+						<div id="noRes">
+							<p> No Results </p>
+						</div>
+					<% } else { %>
 
-				<!-- Navigation: Bottom -->
-					<div id="navigation">
-						<!-- TODO: Legitimately hate how this looks...  -->
-						<% if (page - 1 < 1) { %>
-							<a class="nav disabled" ><<</a>
-							<a class="nav disabled" ><</a>
-						<% } else { %>
-							<a class="nav" href="/?search=<%= searchURI %>&page=<%= 1 %>"><<</a>
-							<a class="nav" href="/?search=<%= searchURI %>&page=<%= (page - 1) %>"><</a>
-						<% } %>
-
-						<% if (page + 1 > pageCount) { %>
-							<a class="nav disabled" >></a>
-							<a class="nav disabled" >>></a>
-						<% } else { %>
-							<a class="nav" href="/?search=<%= searchURI %>&page=<%= (page + 1) %>">></a>
-							<a class="nav" href="/?search=<%= searchURI %>&page=<%= pageCount %>">>></a>
-						<% } %>
-
-						<br>
-
-						<% for (var i = iter; i <= end; i++) { %>
-							<% if (i == page) { %>
-								<a class="disabled"><%= i %></a>
-								<% continue; %>
-							<% } else if (i > 0) { %>
-								<a href="/?search=<%= searchURI%>&page=<%= i%>"><%= i%></a>
-								<% continue; %>
+						<!-- Navigation: Bottom -->
+						<div id="navigation">
+							<!-- TODO: Legitimately hate how this looks...  -->
+							<% if (page - 1 < 1) { %>
+								<a class="nav disabled" ><<</a>
+								<a class="nav disabled" ><</a>
+							<% } else { %>
+								<a class="nav" href="/?search=<%= searchURI %>&page=<%= 1 %>"><<</a>
+								<a class="nav" href="/?search=<%= searchURI %>&page=<%= (page - 1) %>"><</a>
 							<% } %>
-						<% } %>
-					</div>
 
+							<% if (page + 1 > pageCount) { %>
+								<a class="nav disabled" >></a>
+								<a class="nav disabled" >>></a>
+							<% } else { %>
+								<a class="nav" href="/?search=<%= searchURI %>&page=<%= (page + 1) %>">></a>
+								<a class="nav" href="/?search=<%= searchURI %>&page=<%= pageCount %>">>></a>
+							<% } %>
+
+							<br>
+
+							<% for (var i = iter; i <= end; i++) { %>
+								<% if (i == page) { %>
+									<a class="disabled"><%= i %></a>
+									<% continue; %>
+								<% } else if (i > 0) { %>
+									<a href="/?search=<%= searchURI%>&page=<%= i%>"><%= i%></a>
+									<% continue; %>
+								<% } %>
+							<% } %>
+						</div>
+
+					<% } %>
 				<!-- Footer -->
 					<div id="settings">
 						<hr>
