@@ -840,19 +840,50 @@ function addOnEnter() {
 };
 
 jQuery.ui.autocomplete.prototype._resizeMenu = function () {
-  var ul = this.menu.element;
-  ul.outerWidth(this.element.outerWidth());
-}
+	var ul = this.menu.element;
+	ul.outerWidth(this.element.outerWidth());
+};
 
 $(function() {
+	//https://miroslavpopovic.com/posts/2012/06/jqueryui-autocomplete-filter-words-starting-with-term
+	//why tf does this not support regex out the box? wtf?
+	$.ui.autocomplete.filter = function (array, term) {
+		var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(term), "i");
+		return $.grep(array, function (value) {
+			return matcher.test(value.label || value.value || value);
+		});
+	};
+
 	$("#searchBar").autocomplete({
 		name: 'search',
-		source: 'http://192.168.0.94:3443/getTags',
+		//source: 'http://192.168.0.94:3443/getTags',
+		source: function(req, res, data) {
+			$.ajax({
+				url: "http://192.168.0.94:3443/getTags",
+				type: "GET",
+				dataType: "json",
+				success: function(data, textStatus, jqXHR) {
+					let lastTerm = req.term.split(/ \s*/).pop();
+					res($.ui.autocomplete.filter(data, lastTerm));
+				}
+			});
+		},
 		appendTo: '#searchForm',
+		focus: function() {
+			return false;
+		},
 		position: {
 			my: "right top",
 			at: "right bottom",
 			collision: "none"
+		},
+		select: function(event, ui) {
+			var terms = this.value.split(/ \s*/);
+			terms.pop();
+			terms.push(ui.item.value);
+			terms.push("");
+			this.value = terms.join(" ");
+			return false;
 		},
 		limit: 10
 	});
