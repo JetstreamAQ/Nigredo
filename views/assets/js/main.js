@@ -763,7 +763,7 @@ function insertBox() {
 
 	$(".submit").autocomplete({
 		name: 'tag',
-		source: 'http://192.168.0.94:3443/getTags',
+		source: '/getTags',
 		appendTo: '#addForm',
 		position: {
 			my: "right bottom",
@@ -859,7 +859,7 @@ $(function() {
 		//source: 'http://192.168.0.94:3443/getTags',
 		source: function(req, res, data) {
 			$.ajax({
-				url: "http://192.168.0.94:3443/getTags",
+				url: "/getTags",
 				type: "GET",
 				dataType: "json",
 				success: function(data, textStatus, jqXHR) {
