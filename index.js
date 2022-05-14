@@ -9,6 +9,7 @@ const addTag = require('./src/addTag');
 const removeTag = require('./src/removeTag');
 const scanDir = require('./src/scan');
 const getTags = require('./src/getTags');
+const upload = require('./src/upload');
 
 const app = express();
 app.use(express.static(__dirname + '/views'));
@@ -132,7 +133,12 @@ app.get('/getTags', function(req, res) {
 });
 
 app.post('/upload', function(req, res) {
-	console.log("recieved");
+	upload(req, res, function(err) {
+		if (err)
+			return res.end("Error uploading file");
+
+		res.redirect('back');
+	});
 });
 
 app.listen(process.env.PORT || 3443, () => console.log("App running on port 3443"));
