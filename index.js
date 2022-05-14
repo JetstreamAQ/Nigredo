@@ -131,4 +131,8 @@ app.get('/getTags', function(req, res) {
 	});
 });
 
+app.post('/upload', function(req, res) {
+	console.log("recieved");
+});
+
 app.listen(process.env.PORT || 3443, () => console.log("App running on port 3443"));

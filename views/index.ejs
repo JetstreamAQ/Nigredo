@@ -143,7 +143,7 @@
 				<!-- Footer -->
 					<div id="settings">
 						<hr>
-						<button type="button">Change Directory</button>
+						<button type="button" id="upload">Upload</button>
 						<button type="button" id="scan">Scan Directory</button>
 					</div>
 
@@ -153,6 +153,20 @@
 						</ul>
 					</footer>
 
+			</div>
+
+			<div id="overlay">
+				<div id="overlayBox">
+					<h1>Upload Image</h1>
+					<hr>
+					<!-- remember to include the action= tag  -->
+					<form id="uploadImg" action="/upload" enctype="multipart/form-data" method="post">
+						<input type="file" name="image" multiple/>
+						<br>
+						<input type="submit" value="Upload Image" name="submit">
+					</form>
+					<button id="cancel">Cancel</button>
+				</div>
 			</div>
 
 		<!-- Scripts -->

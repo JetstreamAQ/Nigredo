@@ -754,7 +754,6 @@ var main = (function($) { var _ = {
 }; return _; })(jQuery); main.init();
 
 // GALLERY RELATED: FIRST IMAGE ADDING TAG ONCLICK + ADD TAG FUNCTION //
-
 $(".insert").click(insertBox);
 
 function insertBox() {
@@ -834,16 +833,17 @@ function removeTag() {
 
 function addOnEnter() {
 	$('.submit').keydown(function(event) {
-		if (event.keyCode === 13)
+		if (event.which === 13)
 			addTag();
 	});
 };
 
-jQuery.ui.autocomplete.prototype._resizeMenu = function () {
+/*jQuery.ui.autocomplete.prototype._resizeMenu = function () {
 	var ul = this.menu.element;
 	ul.outerWidth(this.element.outerWidth());
-};
+};*/
 
+// AUTOCOMPLETE //
 $(function() {
 	//https://miroslavpopovic.com/posts/2012/06/jqueryui-autocomplete-filter-words-starting-with-term
 	//why tf does this not support regex out the box? wtf?
@@ -888,3 +888,22 @@ $(function() {
 		limit: 10
 	});
 });
+
+// UPLOAD //
+var removeOverlay = function() {
+	$("#overlay").css("display", "none");
+};
+
+var overlayKeyEvnt = function() {
+	if (event.which === 27 || event.which === 13) {
+		removeOverlay();
+		$(document).unbind("keydown", overlayKeyEvnt);
+	}	
+};
+
+$("#upload").click(function() {
+	$("#overlay").css("display", "block");
+	$(document).keydown(overlayKeyEvnt);
+});
+
+$("#cancel").click(removeOverlay);

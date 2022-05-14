@@ -78,6 +78,58 @@ input, select, textarea {
 	font-size: 2em;
 }
 
+#overlay {
+	position: fixed;
+	display: none;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 20000;
+}
+
+	#overlay #overlayBox {
+		position: absolute;
+		max-width: 50%;
+		max-height: 50%;
+		min-width: 50%;
+		min-height: 50%;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		padding: 2em;
+		
+		background-color: #282828;
+		color: #aaa;
+		font-size: 1em;
+
+		overflow: auto;
+	}
+
+		#overlay #overlayBox h1 {
+			font-size: 2em;
+			font-weight: bold;
+		}
+		
+		#overlay #overlayBox form {
+			height: 100%;
+			width: 50%;
+		}
+
+			#overlay #overlayBox input[type="file"] {
+				margin-top: 0.8em;
+				margin-bottom: 0.8em;
+			}
+
+		#overlay #overlayBox button {
+			margin-top: 0em;
+			font-size: 1em;
+			transform: translate(10em, -3.85em);
+		}
+
 .ui-helper-hidden-accessible {
 	height: 0;
 }
@@ -1027,11 +1079,13 @@ input, select, textarea {
 
 /* Footer */
 	#settings {
+		display: grid;
+		grid-gap: 5px;
 		padding: 0em 1.25em 0em 1.25em;
 	}
 
 		#settings button {
-			font-size: 0.7em;
+			font-size: 0.9em;
 			margin: 0em 0em 0.25em 0em;
 		}
 
