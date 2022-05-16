@@ -886,6 +886,25 @@ $(function() {
 	});
 });
 
+// Force directory scan
+function reload() {
+	//NB: Promises, callbacks and async don't seem to work at all when resolving issue #1.
+	//    I'm probably doing something very wrong here, or the overall program structure is ass.
+	//	  Willing to bet it's the latter.  However, I want to get this working properly.
+	//	  So, I'll just settle with this in the interim.
+	setTimeout(function() {
+		window.location.reload();
+	}, 120);
+}
+
+$('#scan').click(function() {
+	$.post('/scan', {}, function(data) {
+		if (data.done == 0) {
+			reload();
+		}
+	});
+});
+
 // UPLOAD //
 var removeOverlay = function() {
 	$("#overlay").css("display", "none");
@@ -905,6 +924,10 @@ $("#upload").click(function() {
 
 $("#cancel").click(removeOverlay);
 
+$('#uploadImg').submit(function() { 
+	$(this).find(':input[type=submit]').prop('disabled', true);
+}); //disable submit on submit
+
 // Delete //
 function deleteImage() {
 	let confirmation = confirm("Are you sure you want to delete this image?");
@@ -914,10 +937,7 @@ function deleteImage() {
 	let key = $('.dir').text();
 	$.post('/deleteImage', {key: key}, function(data) {
 		if (data.result == 0) {
-			//bad: no idea how long deletion may take
-			setTimeout(function() {
-				window.location.reload(true);
-			}, 120);
+			reload(1);
 		} else {
 			alert("A problem was encountered when deleting the file.  Err: " + data.result);
 		}

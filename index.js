@@ -105,8 +105,6 @@ app.post('/', (req, res) => {
 });
 
 app.post('/scan', function(req, res) {
-	console.log('Recieved.');
-
 	scanDir(__dirname + '/img', function (result) {
 		res.json({done: result});
 	});
@@ -136,10 +134,13 @@ app.get('/getTags', function(req, res) {
 
 app.post('/upload', function(req, res) {
 	upload(req, res, function(err) {
-		if (err) return res.end("Error uploading file");
+		if (err) return res.end("Error uploading file(s).");
 
-		scanDir(__dirname + '/img', function(result){});
-		res.redirect('back');
+		scanDir(__dirname + '/img', function(result) {
+			if (result === 0)
+				res.end('<script>window.location.href="/";</script>');
+		});
+
 	});
 });
 
