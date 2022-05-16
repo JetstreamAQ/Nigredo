@@ -469,6 +469,9 @@ var main = (function($) { var _ = {
 					//tagging function: remove tags
 						jQuery(".remove:not(.clickadded)").click(removeTag).addClass("clickadded");
 						//$(".remove").click(removeTag);
+
+					//delete image binding
+						jQuery(".deleteImg:not(.clickadded)").click(deleteImage).addClass("clickadded");
 				});
 
 	},
@@ -754,8 +757,6 @@ var main = (function($) { var _ = {
 }; return _; })(jQuery); main.init();
 
 // GALLERY RELATED: FIRST IMAGE ADDING TAG ONCLICK + ADD TAG FUNCTION //
-$(".insert").click(insertBox);
-
 function insertBox() {
 	$(this).unbind("click");
 	$(this).parent().prepend("<input class='submit' type='text' name='tag' value=''>");
@@ -817,7 +818,7 @@ function addTag() {
 	$('.submit').remove();
 }
 
-$(".remove").click(removeTag);
+$(".insert").click(insertBox);
 
 function removeTag() {
 	let key = $('.dir').text();
@@ -831,17 +832,14 @@ function removeTag() {
 	}, 'json');
 }
 
+$(".remove").click(removeTag);
+
 function addOnEnter() {
 	$('.submit').keydown(function(event) {
 		if (event.which === 13)
 			addTag();
 	});
 };
-
-/*jQuery.ui.autocomplete.prototype._resizeMenu = function () {
-	var ul = this.menu.element;
-	ul.outerWidth(this.element.outerWidth());
-};*/
 
 // AUTOCOMPLETE //
 $(function() {
@@ -856,7 +854,6 @@ $(function() {
 
 	$("#searchBar").autocomplete({
 		name: 'search',
-		//source: 'http://192.168.0.94:3443/getTags',
 		source: function(req, res, data) {
 			$.ajax({
 				url: "/getTags",
@@ -907,3 +904,21 @@ $("#upload").click(function() {
 });
 
 $("#cancel").click(removeOverlay);
+
+// Delete //
+function deleteImage() {
+	let confirmation = confirm("Are you sure you want to delete this image?");
+	if (!confirmation)
+		return;
+
+	let key = $('.dir').text();
+	$.post('/deleteImage', {key: key}, function(data) {
+		if (data.result == 0) {
+			window.location.reload(true);
+		} else {
+			alert("A problem was encountered when deleting the file.  Err: " + data.result);
+		}
+	});
+}
+
+$(".deleteImg").click(deleteImage);

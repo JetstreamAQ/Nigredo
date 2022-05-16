@@ -10,6 +10,7 @@ const removeTag = require('./src/removeTag');
 const scanDir = require('./src/scan');
 const getTags = require('./src/getTags');
 const upload = require('./src/upload');
+const delImg = require("./src/delete");
 
 const app = express();
 app.use(express.static(__dirname + '/views'));
@@ -23,7 +24,7 @@ app.use('/thumb', sharp.expressSharp ({
 	imageAdapter: new sharp.FsAdapter(path.join(__dirname, 'img'))
 }));
 
-const entriesPerPage = 20;
+const entriesPerPage = 30;
 var search = "";
 
 var page = function(req, res, searchTerms) {
@@ -33,7 +34,8 @@ var page = function(req, res, searchTerms) {
 		terms[i] = escape(terms[i]);
 
 	let queryTerms = "(\'" + terms.join('\', \'') + "\')";
-	let searchURI = search;
+	let urlTerms = encodeURIComponent(terms.join("+"));
+	let searchURI = urlTerms;
 
 	var sql = `SELECT DISTINCT A.url, B.tags 
 			   FROM (SELECT * FROM Media) as A 
@@ -66,15 +68,15 @@ var page = function(req, res, searchTerms) {
 			var iter = 1;
 			var end = 1;
 			pageCount = 1;
-			res.render('index', {title: 'URL', data: data, page, iter, end, pageCount, searchURI, search});
+			res.render('index', {data: data, page, iter, end, pageCount, searchURI, search});
 			return;
 		}
 
 		var page = req.query.page ? Number(req.query.page) : 1;
 		if (page > pageCount) {
-			res.redirect('/?page=' + encodeURIComponent(pageCount));
+			res.redirect('/?search=' + urlTerms + '&page=' + encodeURIComponent(pageCount));
 		} else if (page < 1) {
-			res.redirect('/?page=' + encodeURIComponent(1));
+			res.redirect('/?search=' + urlTerms + '&page=' + encodeURIComponent(1));
 		}
 
 		const lowerBound = (page - 1) * entriesPerPage;
@@ -89,7 +91,7 @@ var page = function(req, res, searchTerms) {
 				iter -= (page + 4) - pageCount;
 			}
 
-			res.render('index', {title: 'URL', data: trimData, page, iter, end, pageCount, searchURI, search});
+			res.render('index', {data: trimData, page, iter, end, pageCount, searchURI, search});
 		});
 	});
 };
@@ -106,19 +108,19 @@ app.post('/scan', function(req, res) {
 	console.log('Recieved.');
 
 	scanDir(__dirname + '/img', function (result) {
-			res.json({done: result});
+		res.json({done: result});
 	});
 });
 
 app.post('/addTag', function(req, res) {
 	addTag(req.body.key, req.body.tag, function(result) {
-			res.json({result: result});
+		res.json({result: result});
 	});
 });
 
 app.post('/removeTag', function(req, res) {
 	removeTag(req.body.key, req.body.tag, function(result) {
-			res.json({result: result});
+		res.json({result: result});
 	});
 });
 
@@ -137,7 +139,14 @@ app.post('/upload', function(req, res) {
 		if (err)
 			return res.end("Error uploading file");
 
+		scanDir(__dirname + '/img', function(result){});
 		res.redirect('back');
+	});
+});
+
+app.post('/deleteImage', function(req, res) {
+	delImg(req.body.key, function(result) {
+		res.json({result: result});
 	});
 });
 

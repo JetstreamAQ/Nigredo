@@ -1379,6 +1379,14 @@ input, select, textarea {
 					margin: 0em 0em 1em 0em;
 				}
 
+				#viewer .slide .caption .deleteImg {
+					margin-left: 0.5em;
+				}
+
+					#viewer .slide .caption .deleteImg:hover {
+						cursor: pointer;
+					}
+
 				#viewer .slide .caption .tags {
 					display: inline-block;
 					padding: 0;
