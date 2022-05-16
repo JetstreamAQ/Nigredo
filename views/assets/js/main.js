@@ -914,7 +914,10 @@ function deleteImage() {
 	let key = $('.dir').text();
 	$.post('/deleteImage', {key: key}, function(data) {
 		if (data.result == 0) {
-			window.location.reload(true);
+			//bad: no idea how long deletion may take
+			setTimeout(function() {
+				window.location.reload(true);
+			}, 120);
 		} else {
 			alert("A problem was encountered when deleting the file.  Err: " + data.result);
 		}

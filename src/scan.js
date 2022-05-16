@@ -11,7 +11,7 @@ var scan = function(src, callback) {
 	}
 };
 
-var scanDir = function(directory) {
+var scanDir = function(directory, callback) {
 	scan(directory, function(err, res) {
 		if (err) throw err;
 		
@@ -30,6 +30,8 @@ var scanDir = function(directory) {
 				}
 			});
 		}
+
+		callback(0);
 	});
 };
 

@@ -5,13 +5,17 @@ var sqlQuery = function(key, sql, type) {
 	db.query(sql, function(err, res) {
 		if (err) throw err;
 
-		let msg = "";
 		switch(type) {
-			case 0: msg = "MediaTag entries for " + key + "successfully deleted."; break;
-			case 1: msg = "Media entry for " + key + " successfully deleted."; break;
+			case 0: 
+				let sql = "DELETE FROM Media WHERE Media.url=\'" + escape(key) + "\';";
+				sqlQuery(key, sql, 1);
+				return;
+			case 1:
+				console.log(key + " was deleted successfully!");
+				break;
 		}
 
-		console.log(msg);
+		console.log("Database entries for " + key + " successfully deleted.");
 	});
 }
 
@@ -30,10 +34,6 @@ var deleteImage = function(key, callback) {
 		let sql = "DELETE FROM MediaTag WHERE MediaTag.url=\'" + escKey + "\';";
 		sqlQuery(key, sql, 0);
 
-		sql = "DELETE FROM Media WHERE Media.url=\'" + escKey + "\';";
-		sqlQuery(key, sql, 1);
-
-		console.log(key + " was deleted successfully!");
 		callback(0);
 	});
 }

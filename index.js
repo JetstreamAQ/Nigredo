@@ -126,7 +126,7 @@ app.post('/removeTag', function(req, res) {
 
 app.get('/getTags', function(req, res) {
 	input = req.originalUrl;
-	procIn = input.toLowerCase().substring(14 ,input.length);
+	procIn = input.toLowerCase().substring(14 ,input.length); //processed input
 
 	getTags(escape(procIn), function(result) {
 		res.setHeader('Content-Type', 'application/json');
@@ -136,8 +136,7 @@ app.get('/getTags', function(req, res) {
 
 app.post('/upload', function(req, res) {
 	upload(req, res, function(err) {
-		if (err)
-			return res.end("Error uploading file");
+		if (err) return res.end("Error uploading file");
 
 		scanDir(__dirname + '/img', function(result){});
 		res.redirect('back');
