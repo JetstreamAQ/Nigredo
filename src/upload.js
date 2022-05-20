@@ -1,3 +1,5 @@
+"use strict";
+
 const scan = require('./scan');
 const multer = require('multer');
 const path = require('path');

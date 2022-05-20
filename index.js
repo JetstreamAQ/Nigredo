@@ -1,3 +1,5 @@
+"use strict";
+
 const express = require('express');
 const {readFile, readFileSync} = require('fs').promises;
 const sharp = require('express-sharp');
@@ -25,50 +27,28 @@ app.use('/thumb', sharp.expressSharp ({
 }));
 
 const entriesPerPage = 30;
-var search = "";
 
 var page = function(req, res, searchTerms) {
-	search = decodeURI(searchTerms).trim();
+	let search = decodeURI(searchTerms).trim();
 	let terms = search.split(" ");
 	for (let i = 0; i < terms.length; ++i)
 		terms[i] = escape(terms[i]);
 
-	let queryTerms = "(\'" + terms.join('\', \'') + "\')";
+	let queryTerms = "\'" + terms.join(',') + "\'";
 	let urlTerms = encodeURIComponent(terms.join("+"));
 	let searchURI = urlTerms;
 
-	var sql = `SELECT DISTINCT A.url, B.tags 
-			   FROM (SELECT * FROM Media) as A 
-			   LEFT JOIN ( 
-					SELECT MediaTag.url, GROUP_CONCAT(MediaTag.name SEPARATOR ' ') as tags 
-					FROM MediaTag GROUP BY MediaTag.url) as B 
-			   ON A.url = B.url;`;
-	if (search) {
-		sql = `SELECT DISTINCT A.url, B.tags
-			   FROM (
-					SELECT DISTINCT MediaTag.url, GROUP_CONCAT(MediaTag.name SEPARATOR ' ') AS tags
-					FROM Media, MediaTag
-					WHERE MediaTag.name IN` + queryTerms + ` AND MediaTag.url = Media.url
-					GROUP BY Media.url
-					HAVING COUNT(MediaTag.name) = ` + terms.length + `) as A
-			   INNER JOIN (
-					SELECT DISTINCT Media.url, GROUP_CONCAT(MediaTag.name SEPARATOR ' ') as tags
-					FROM Media, MediaTag
-					WHERE MediaTag.url = Media.url
-					GROUP BY Media.URL) as B
-			   ON A.url = B.url;`;
-	}
-
+	let sql = (search) ? "CALL search(" + queryTerms + ", " + terms.length + ")" : "CALL searchNoTerms()";
 	db.query(sql, function(err, data, fields) {
 		if (err) throw err;
 
-		var pageCount = Math.ceil(data.length / entriesPerPage);
+		var pageCount = Math.ceil(data[0].length / entriesPerPage);
 		if (pageCount == 0) { //TODO: Make a dummy page or something so you don't have to do this or something idk.
 			var page = 1;
 			var iter = 1;
 			var end = 1;
 			pageCount = 1;
-			res.render('index', {data: data, page, iter, end, pageCount, searchURI, search});
+			res.render('index', {data: data[0], page, iter, end, pageCount, searchURI, search});
 			return;
 		}
 
@@ -80,7 +60,12 @@ var page = function(req, res, searchTerms) {
 		}
 
 		const lowerBound = (page - 1) * entriesPerPage;
-		sql = sql.substring(0, sql.length - 1)+ ' LIMIT ' + lowerBound + ', ' + entriesPerPage + ';';
+		sql = (search) ? "CALL searchBound(" 
+							+ queryTerms + ", " 
+							+ terms.length + ", " 
+							+ lowerBound + ", " 
+							+ entriesPerPage + ");" :
+						 "CALL searchNoTermsBound(" + lowerBound + ", " + entriesPerPage + ")";
 		db.query(sql, (err, trimData) => {
 			if(err) throw err;
 
@@ -91,13 +76,13 @@ var page = function(req, res, searchTerms) {
 				iter -= (page + 4) - pageCount;
 			}
 
-			res.render('index', {data: trimData, page, iter, end, pageCount, searchURI, search});
+			res.render('index', {data: trimData[0], page, iter, end, pageCount, searchURI, search});
 		});
 	});
 };
 
 app.get('/', (req, res) => {
-	page(req, res, escape(search));
+	page(req, res, escape(""));
 });
 
 app.post('/', (req, res) => {
@@ -123,8 +108,8 @@ app.post('/removeTag', function(req, res) {
 });
 
 app.get('/getTags', function(req, res) {
-	input = req.originalUrl;
-	procIn = input.toLowerCase().substring(14 ,input.length); //processed input
+	let input = req.originalUrl;
+	let procIn = input.toLowerCase().substring(14 ,input.length); //processed input
 
 	getTags(escape(procIn), function(result) {
 		res.setHeader('Content-Type', 'application/json');

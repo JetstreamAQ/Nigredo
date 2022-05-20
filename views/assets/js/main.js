@@ -1,3 +1,5 @@
+"use strict";
+
 /*
 	Lens by HTML5 UP
 	html5up.net | @ajlkn
@@ -899,9 +901,7 @@ function reload() {
 
 $('#scan').click(function() {
 	$.post('/scan', {}, function(data) {
-		if (data.done == 0) {
-			reload();
-		}
+		reload();
 	});
 });
 
@@ -936,11 +936,8 @@ function deleteImage() {
 
 	let key = $('.dir').text();
 	$.post('/deleteImage', {key: key}, function(data) {
-		if (data.result == 0) {
-			reload(1);
-		} else {
+		if (data.result != 0)
 			alert("A problem was encountered when deleting the file.  Err: " + data.result);
-		}
 	});
 }
 

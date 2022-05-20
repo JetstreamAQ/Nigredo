@@ -1,13 +1,15 @@
+"use strict";
+
 const db = require('./database');
 
 var getTags = function(search, callback) {
-	let sql = 'SELECT * FROM Tag WHERE Tag.name REGEXP \'^' + search + '\'';
-	db.query(sql, function(err, data) {
+	let sql = 'CALL GetTags(?)';
+	db.query(sql, ['^' + search], function(err, data) {
 		if (err) throw err;
 
 		var tags = [];
-		for (i = 0; i < data.length; i++) {
-			tags[i] = decodeURI(data[i].name);
+		for (let i = 0; i < data[0].length; i++) {
+			tags[i] = decodeURI(data[0][i].name);
 		}
 
 		callback(tags);

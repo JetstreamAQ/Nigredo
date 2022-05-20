@@ -1,14 +1,16 @@
+"use strict";
+
 const db = require('./database');
 const fs = require('fs');
 
 var sqlQuery = function(key, sql, type) {
 	return new Promise((res) => {
-		db.query(sql, function(err, res) {
+		db.query(sql, [escape(key)], function(err, res) {
 			if (err) throw err;
 
 			switch(type) {
 				case 0: 
-					let sql = "DELETE FROM Media WHERE Media.url=\'" + escape(key) + "\';";
+					let sql = "CALL DeleteMedia(?)";
 					sqlQuery(key, sql, 1);
 					return;
 				case 1:
@@ -23,13 +25,7 @@ var sqlQuery = function(key, sql, type) {
 	});
 }
 
-var sqlPromise = new Promise(function(res) {
-
-});
-
 var deleteImage = function(key, callback) {
-	let escKey = escape(key);
-
 	fs.unlink(__dirname + "/../img/" + key, async function(err) {
 		if (err) {
 			console.log(err);
@@ -39,7 +35,7 @@ var deleteImage = function(key, callback) {
 		//clearing the database of all related tags
 		//NB: Deleting these in seperate queries.  Some images may have zero tags, which will cause a
 		//    joint deletion query to delete nothing.
-		let sql = "DELETE FROM MediaTag WHERE MediaTag.url=\'" + escKey + "\';";
+		let sql = "CALL DeleteMediaTag(?)";
 		sqlQuery(key, sql, 0).then(callback(0));
 
 		//callback(0);

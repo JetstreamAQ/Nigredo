@@ -1,10 +1,12 @@
+"use strict";
+
 const glob = require("glob");
 const path = require('path');
 const db = require('./database');
 
 var scan = function(src, callback) {
-	extensions = ['jpeg', 'png', 'jpg', 'JPG', 'PNG', 'JPEG'];
-	files = [[]];
+	let extensions = ['jpeg', 'png', 'jpg', 'JPG', 'PNG', 'JPEG'];
+	let files = [[]];
 	for (var i = 0; i < extensions.length; i++) {
 		files[i] = glob(src + '/**/*.' + extensions[i], callback);
 	}
@@ -17,15 +19,16 @@ var scanDir = function(directory, callback) {
 		var rootDir = path.join(__dirname + '/../img/');
 		for (var i = 0; i < res.length; i++) {
 			let trimPath = res[i].substring(rootDir.length, res[i].length);
-			let insertMedia = 'INSERT INTO Media VALUES ("' + escape(trimPath) + '");';
-			db.query(insertMedia, function(err, result) {
+			let sql = "CALL InsertMedia(?)";
+			db.query(sql, [escape(trimPath)], function(err, result) {
 				if (err != null && err.code == 'ER_DUP_ENTRY') {
 					console.log(trimPath + " already insterted in the DB.");
+					return;
 				} else if (err) {
 					throw err;
-				} else {
-					console.log(trimPath + " inserted.");
 				}
+
+				console.log(trimPath + " inserted.");
 			});
 		}
 	});

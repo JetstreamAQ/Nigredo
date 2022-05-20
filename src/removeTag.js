@@ -1,3 +1,5 @@
+"use strict";
+
 const db = require('./database');
 
 var removeTag = function(key, tag, callback) {
