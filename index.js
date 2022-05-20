@@ -85,6 +85,10 @@ app.get('/', (req, res) => {
 	page(req, res, escape(""));
 });
 
+app.get('/reload', (req, res) => {
+	res.end('<script>window.location.href="/";</script>');
+});
+
 app.post('/', (req, res) => {
 	page(req, res, escape(req.body.search));
 });

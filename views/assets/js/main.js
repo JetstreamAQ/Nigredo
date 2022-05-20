@@ -894,9 +894,9 @@ function reload() {
 	//    I'm probably doing something very wrong here, or the overall program structure is ass.
 	//	  Willing to bet it's the latter.  However, I want to get this working properly.
 	//	  So, I'll just settle with this in the interim.
-	setTimeout(function() {
-		window.location.reload();
-	}, 120);
+	//setTimeout(function() {
+		window.location.href="/reload";
+	//}, 120);
 }
 
 $('#scan').click(function() {
@@ -938,6 +938,8 @@ function deleteImage() {
 	$.post('/deleteImage', {key: key}, function(data) {
 		if (data.result != 0)
 			alert("A problem was encountered when deleting the file.  Err: " + data.result);
+		else
+			reload();
 	});
 }
 
