@@ -30,10 +30,13 @@ if [ ! -z "$1" ] && [ ! -z "$3" ] && [ $(echo $3 | egrep '^(https:\/\/pbs\.twimg
 
 	curl --progress-bar -v $3 -o $fileName
 	mv $fileName $dir
+
 	exit 0
 elif [ ! -z "$1" ] && [ ! -z "$3" ]; then
 	curl --progress-bar -v $3
 	mv *.{png,PNG,jpg,JPG,jpeg,JPEG} $1
+
+	exit 0
 else
 	echo "No link passed/Invalid # of arguments"
 	exit 1
