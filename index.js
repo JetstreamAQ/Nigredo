@@ -13,6 +13,7 @@ const scanDir = require('./src/scan');
 const getTags = require('./src/getTags');
 const upload = require('./src/upload');
 const delImg = require("./src/delete");
+const fetchImages = require("./src/fetchImages");
 
 const app = express();
 app.use(express.static(__dirname + '/views'));
@@ -125,9 +126,14 @@ app.post('/upload', function(req, res) {
 	upload(req, res, function(err) {
 		if (err) return res.end("Error uploading file(s).");
 
-		scanDir(__dirname + '/img', function(result) {
-			if (result === 0)
-				res.end('<script>window.location.href="/";</script>');
+		let links = req.body.imgLinks.split("\n");
+		for (let i = 0; i < links.length - 1; i++)
+			links[i] = links[i].substring(0, links[i].length - 1);
+		fetchImages(links, function() {
+			scanDir(__dirname + '/img', function(result) {
+				if (result === 0)
+					res.end('<script>window.location.href="/";</script>');
+			});
 		});
 
 	});

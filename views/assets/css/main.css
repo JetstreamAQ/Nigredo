@@ -93,24 +93,22 @@ input, select, textarea {
 
 	#overlay #overlayBox {
 		position: absolute;
-		max-width: 50%;
-		max-height: 50%;
-		min-width: 50%;
-		min-height: 50%;
+		width: 80%;
+		height: fit-content;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
 		padding: 2em;
+
+		display: inline-block;
 		
 		background-color: #282828;
 		color: #aaa;
 		font-size: 1em;
-
-		overflow: auto;
 	}
 
 		#overlay #overlayBox h1 {
-			font-size: 2em;
+			font-size: 1.8em;
 			font-weight: bold;
 		}
 		
@@ -128,6 +126,12 @@ input, select, textarea {
 			margin-top: 0em;
 			font-size: 1em;
 			transform: translate(10em, -3.85em);
+		}
+
+		#overlay #overlayBox textarea {
+			width: 200%;
+			height: 10em;
+			line-height: 1.25em;
 		}
 
 .ui-helper-hidden-accessible {

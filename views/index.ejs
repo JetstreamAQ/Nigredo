@@ -158,10 +158,11 @@
 
 			<div id="overlay">
 				<div id="overlayBox">
-					<h1>Upload Images (Max: 20)</h1>
+					<h1>Upload Images/Fetch from URLs (Max: 20)</h1>
 					<hr>
 					<!-- remember to include the action= tag  -->
-					<form id="uploadImg" action="/upload" enctype="multipart/form-data" method="post">
+					<form id="uploadImg" action="/upload" enctype="multipart/form-data" method="POST">
+						<textarea type="text" cols=252 rows="20" name="imgLinks"></textarea>
 						<input type="file" name="image" multiple/>
 						<br>
 						<input type="submit" value="Upload Image" name="submit">
