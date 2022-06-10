@@ -129,6 +129,7 @@ app.post('/upload', function(req, res) {
 		let links = req.body.imgLinks.split("\n");
 		for (let i = 0; i < links.length - 1; i++)
 			links[i] = links[i].substring(0, links[i].length - 1);
+
 		fetchImages(links, function() {
 			scanDir(__dirname + '/img', function(result) {
 				if (result === 0)

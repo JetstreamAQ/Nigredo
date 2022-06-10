@@ -36,7 +36,7 @@ var deleteImage = function(key, callback) {
 		//NB: Deleting these in seperate queries.  Some images may have zero tags, which will cause a
 		//    joint deletion query to delete nothing.
 		let sql = "CALL DeleteMediaTag(?)";
-		sqlQuery(key, sql, 0).then(callback(0));
+		sqlQuery(key, sql, 0).then(setTimeout(function() {callback(0)}, 240));
 
 		//callback(0);
 	});
