@@ -895,7 +895,7 @@ function reload() {
 	//	  Willing to bet it's the latter.  However, I want to get this working properly.
 	//	  So, I'll just settle with this in the interim.
 	//setTimeout(function() {
-		window.location.href="/reload";
+		window.location.href="/";
 	//}, 120);
 }
 
