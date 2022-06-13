@@ -41,8 +41,11 @@ if [ $(echo $3 | egrep '^(https:\/\/pbs\.twimg\.com\/media\/.*)') ]; then
 
 	exit 0
 else
-	curl --progress-bar -O $3
-	mv *.{png,PNG,jpg,JPG,jpeg,JPEG} $dir
+	fileName="$(date +%s%3N)"
+	curl --progress-bar -v $3 -o "$fileName"
+	
+	ext="$(file --mime-type -b $fileName | cut -c 7-)"
+	mv $fileName "$dir/$fileName.$ext"
 
 	exit 0
 fi
