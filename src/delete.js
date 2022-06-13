@@ -3,7 +3,7 @@
 const db = require('./database');
 const fs = require('fs');
 
-var sqlQuery = function(key, sql, type) {
+var sqlQuery = function(key, sql, type, callback) {
 	return new Promise((res) => {
 		db.query(sql, [escape(key)], function(err, res) {
 			if (err) throw err;
@@ -11,7 +11,7 @@ var sqlQuery = function(key, sql, type) {
 			switch(type) {
 				case 0: 
 					let sql = "CALL DeleteMedia(?)";
-					sqlQuery(key, sql, 1);
+					sqlQuery(key, sql, 1, callback);
 					return;
 				case 1:
 					console.log(key + " was deleted successfully!");
@@ -19,6 +19,7 @@ var sqlQuery = function(key, sql, type) {
 			}
 
 			console.log("Database entries for " + key + " successfully deleted.");
+			callback(0);
 		});
 
 		res();
@@ -36,7 +37,7 @@ var deleteImage = function(key, callback) {
 		//NB: Deleting these in seperate queries.  Some images may have zero tags, which will cause a
 		//    joint deletion query to delete nothing.
 		let sql = "CALL DeleteMediaTag(?)";
-		sqlQuery(key, sql, 0).then(setTimeout(function() {callback(0)}, 240));
+		sqlQuery(key, sql, 0, callback);
 
 		//callback(0);
 	});
