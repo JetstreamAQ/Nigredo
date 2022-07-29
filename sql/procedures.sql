@@ -10,7 +10,7 @@ CREATE PROCEDURE Search(
 		FROM Media, MediaTag
 		WHERE FIND_IN_SET(MediaTag.name, terms) = count AND MediaTag.url = Media.url
 		GROUP BY Media.url) as A
-		INNER JOIN (
+	INNER JOIN (
 			SELECT DISTINCT Media.url, GROUP_CONCAT(MediaTag.name SEPARATOR ' ') as tags
 			FROM Media, MediaTag
 			WHERE MediaTag.url = Media.url
@@ -30,7 +30,7 @@ CREATE PROCEDURE SearchBound(
 		FROM Media, MediaTag
 		WHERE FIND_IN_SET(MediaTag.name, terms) = count AND MediaTag.url = Media.url
 		GROUP BY Media.url) as A
-		INNER JOIN (
+	INNER JOIN (
 			SELECT DISTINCT Media.url, GROUP_CONCAT(MediaTag.name SEPARATOR ' ') as tags
 			FROM Media, MediaTag
 			WHERE MediaTag.url = Media.url
@@ -62,6 +62,31 @@ CREATE PROCEDURE SearchNoTermsBound(
 		FROM MediaTag GROUP BY MediaTag.url) as B 
 	ON A.url = B.url
 	LIMIT lower, entriesPerPage;
+END//
+
+CREATE PROCEDURE SearchUntagged () 
+BEGIN
+	SELECT DISTINCT A.url, B.tags 
+	FROM 
+		(SELECT * FROM Media) as A 
+	LEFT JOIN ( 
+		SELECT MediaTag.url, GROUP_CONCAT(MediaTag.name SEPARATOR ' ') as tags 
+		FROM MediaTag GROUP BY MediaTag.url) as B 
+	ON A.url = B.url AND tags = null;
+END//
+
+CREATE PROCEDURE SearchUntaggedBound(
+	IN lower INT,
+	IN entriesPerPage INT
+) BEGIN
+	SELECT DISTINCT A.url, B.tags 
+	FROM 
+		(SELECT * FROM Media) as A 
+	LEFT JOIN ( 
+		SELECT MediaTag.url, GROUP_CONCAT(MediaTag.name SEPARATOR ' ') as tags 
+		FROM MediaTag GROUP BY MediaTag.url) as B 
+	ON A.url = B.url AND tags = null
+    LIMIT lower, entriesPerPage;
 END//
 
 CREATE PROCEDURE TagFetch(

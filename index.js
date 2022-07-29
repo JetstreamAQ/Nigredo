@@ -39,7 +39,8 @@ var page = function(req, res, searchTerms) {
 	let urlTerms = encodeURIComponent(terms.join("+"));
 	let searchURI = urlTerms;
 
-	let sql = (search) ? "CALL search(" + queryTerms + ", " + terms.length + ")" : "CALL searchNoTerms()";
+	let sql = 	(search === escape("type:untagged")) ? "CALL searchUntagged()" : 
+				(search) ? "CALL search(" + queryTerms + ", " + terms.length + ")" : "CALL searchNoTerms()";
 	db.query(sql, function(err, data, fields) {
 		if (err) throw err;
 
@@ -61,7 +62,8 @@ var page = function(req, res, searchTerms) {
 		}
 
 		const lowerBound = (page - 1) * entriesPerPage;
-		sql = (search) ? "CALL searchBound(" 
+		sql = 	(search === escape("type:untagged")) ? "CALL searchUntaggedBound(" + lowerBound + ", " + entriesPerPage + ")" :
+				(search) ? "CALL searchBound(" 
 							+ queryTerms + ", " 
 							+ terms.length + ", " 
 							+ lowerBound + ", " 
