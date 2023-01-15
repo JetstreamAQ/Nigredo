@@ -25,7 +25,7 @@ var scanDir = async function(directory, callback) {
 			let sql = "CALL InsertMedia(?)";
 			db.query(sql, [escape(trimPath)], function(err, result) {
 				if (err != null && err.code == 'ER_DUP_ENTRY') {
-					console.log(trimPath + " already insterted in the DB.");
+					// console.log(trimPath + " already insterted in the DB.");
 					return;
 				} else if (err) {
 					throw err;

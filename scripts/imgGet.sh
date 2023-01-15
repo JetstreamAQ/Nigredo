@@ -44,6 +44,7 @@ else
 	fileName="$(date +%s%3N)"
 	curl --progress-bar -v $3 -o "$fileName"
 	
+	mkdir -p $dir
 	ext="$(file --mime-type -b $fileName | cut -c 7-)"
 	mv $fileName "$dir/$fileName.$ext"
 
